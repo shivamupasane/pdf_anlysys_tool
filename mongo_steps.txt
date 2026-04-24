@@ -11,3 +11,64 @@
   source_file: "cald_01_18-11-1947.pdf"
 })
 db.speeches.find().pretty()
+
+use parliament_ai
+
+db.speakers.createIndex({ speaker: 1 })
+db.speakers.createIndex({ speech_count: -1 })
+db.speakers.createIndex({ aliases: 1 })
+
+
+db.speakers.find().sort({ speech_count: -1 }).limit(10).pretty()
+
+db.speakers.findOne({ speaker: "Jagjivan Ram" })
+
+db.speakers.countDocuments()
+
+
+db.speakers.find({}, { speaker: 1, aliases: 1 }).sort({ speaker: 1 })
+ 
+
+ to load data
+  python .\mongo_loader.py  
+  to create index 
+  python .\create_indexes.py
+ to test query
+ python .\query_test.py
+python .\apply_alias_map.py
+python build_speakers.py  
+python speaker_quality_report.py
+
+
+//to run
+python mongo_loader.py
+python extract_special_speakers.py  ---> correct all special cases manually and then apply alias
+python apply_alias_map.py
+python build_speakers.py
+python speaker_quality_report.py
+
+
+db.speakers.countDocuments()
+
+db.speeches.countDocuments()
+
+db.speakers.find().sort({ speech_count: -1 }).limit(10).pretty()
+
+
+db.speakers.find(
+  {},
+  { _id: 0, speaker: 1, aliases: 1, speech_count: 1 }
+).sort({ speaker: 1 })
+
+
+//to find only with special character
+db.speakers.find(
+  { speaker: { $regex: /[^a-zA-Z0-9 ]/ } },
+  { _id: 0, speaker: 1 }
+)
+
+db.speakers.find({
+  speaker: { $regex: /[^a-zA-Z0-9 ]/ }
+})
+
+//python extract_special_speakers.py - to get speaker with special character

@@ -19,3 +19,6 @@ python-dateutil==2.9.0.post0
 # (Optional - future phases: embeddings / AI)
 numpy==1.26.4
 scikit-learn==1.5.1
+
+
+rapidfuzz==3.9.7
