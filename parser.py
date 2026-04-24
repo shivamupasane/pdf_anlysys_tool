@@ -161,6 +161,10 @@ def normalize_speaker(name):
     prefixes = [
         "The Honourable",
         "The Honorable",
+        "The HOnourable",
+        "•.",
+        "The llonourable",
+        "Mr. President The \"Honourable", 
         "Honourable",
         "Honorable",
         "Shri",

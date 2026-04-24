@@ -1,0 +1,21 @@
+# PDF processing
+pdfplumber==0.11.4
+pymupdf==1.24.9   # fallback / better extraction
+
+# OCR (for scanned PDFs - optional but recommended)
+pytesseract==0.3.13
+Pillow==10.4.0
+
+# Data processing
+regex==2024.9.11
+tqdm==4.66.5
+
+# MongoDB
+pymongo==4.8.0
+
+# Utilities
+python-dateutil==2.9.0.post0
+
+# (Optional - future phases: embeddings / AI)
+numpy==1.26.4
+scikit-learn==1.5.1

@@ -1,4 +1,5 @@
 import pdfplumber
+from datetime import datetime
 import re
 from parser import is_speaker_line
 def extract_text_from_pdf(file_path):
@@ -13,7 +14,15 @@ def extract_text_from_pdf(file_path):
     return "\n".join(full_text)
 def extract_speaker(line):
     return line.split(":")[0].strip()
+def extract_date_from_filename(filename):
+    # match dd-mm-yyyy
+    match = re.search(r'(\d{2})-(\d{2})-(\d{4})', filename)
 
+    if match:
+        day, month, year = match.groups()
+        return f"{year}-{month}-{day}"  # ISO format
+
+    return None
 def parse_speeches(text):
     speeches = []
     current_speaker = None

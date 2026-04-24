@@ -1,0 +1,13 @@
+# mongodb steps
+# use parliament_ai
+# db.createCollection("speeches")
+# db.createCollection("speakers")
+# show collections
+# db.speeches.insertOne({
+  speaker: "Jagjivan Ram",
+  speech: "Sir, I beg to move...",
+  date: "1947-11-18",
+  session: "Constituent Assembly",
+  source_file: "cald_01_18-11-1947.pdf"
+})
+db.speeches.find().pretty()
