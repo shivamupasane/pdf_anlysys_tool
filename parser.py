@@ -153,21 +153,41 @@ def is_valid_speaker(name):
     return True
 def normalize_speaker(name):
     name = name.strip()
-    name = re.sub(r"\s+", " ", name)
 
-    name = name.replace("HOnourable", "Honourable")
-    name = name.replace("llonourable", "Honourable")
+    # 1. Remove bracket content (roles, constituency)
+    name = re.sub(r'\(.*?\)', '', name)
 
+    # 2. Remove common prefixes
+    prefixes = [
+        "The Honourable",
+        "The Honorable",
+        "Honourable",
+        "Honorable",
+        "Shri",
+        "Shrimati",
+        "Smt.",
+        "Mr.",
+        "Dr.",
+        "Sir",
+        "Pandit",
+        "Maulana",
+        "Nawab"
+    ]
+
+    for p in prefixes:
+        name = re.sub(rf'\b{p}\b\.?', '', name)
+
+    # 3. Remove extra spaces
+    name = re.sub(r'\s+', ' ', name).strip()
+
+    # 4. Handle special roles
     if "Speaker" in name:
-        return "Mr. Speaker"
+        return "Speaker"
 
     if "President" in name:
-        return "Mr. President"
+        return "President"
 
-    # remove constituency/role info
-    name = re.sub(r"\(.*?\)", "", name)
-
-    return name.strip()
+    return name
 def is_valid_entry(s):
     speaker = s["speaker_raw"].strip()
     speech = s["speech"].strip()
