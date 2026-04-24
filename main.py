@@ -1,37 +1,22 @@
 import json
 from utils import parse_speeches, clean_text, extract_text_from_pdf
-from parser import is_speaker_line, find_debate_start, is_valid_speaker, trim_to_debate, normalize_text,normalize_speaker,is_valid_speech, is_valid_entry
+from parser import is_speaker_line, find_debate_start, is_valid_speaker, trim_to_debate, normalize_text,normalize_speaker,is_valid_speech
 INPUT_FILE = "data/input/cald_01_17-11-1947.pdf"
 OUTPUT_FILE = "data/output/output.json"
 
 def main():
 
     text = extract_text_from_pdf(INPUT_FILE)
-    # text = normalize_text(text)
-    # text = trim_to_debate(text)   # 🔥 VERY IMPORTANT
-
-    # speeches = parse_speeches(text)
-    # speeches = [s for s in speeches if is_valid_speaker(s["speaker_raw"])]
-    # speeches = [s for s in speeches if is_valid_speech(s)]
-    # unique_speakers = set([s["speaker_raw"] for s in speeches])
-
-    # print("Total speeches:", len(speeches))
-    # print("Unique speakers:", len(unique_speakers))
-    text = extract_text_from_pdf(INPUT_FILE)
-
     text = normalize_text(text)
-    text = trim_to_debate(text)
+    text = trim_to_debate(text)   # 🔥 VERY IMPORTANT
 
     speeches = parse_speeches(text)
-
-    for s in speeches:
-        s["speech"] = clean_text(s["speech"])
-        s["speaker"] = normalize_speaker(s["speaker_raw"])
-
-    speeches = [s for s in speeches if is_valid_entry(s)]
+    speeches = [s for s in speeches if is_valid_speaker(s["speaker_raw"])]
+    speeches = [s for s in speeches if is_valid_speech(s)]
+    unique_speakers = set([s["speaker_raw"] for s in speeches])
 
     print("Total speeches:", len(speeches))
-    print("Unique speakers:", len(set(s["speaker"] for s in speeches)))
+    print("Unique speakers:", len(unique_speakers))
     merged = []
     # Clean
     for s in speeches:

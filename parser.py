@@ -168,21 +168,6 @@ def normalize_speaker(name):
     name = re.sub(r"\(.*?\)", "", name)
 
     return name.strip()
-def is_valid_entry(s):
-    speaker = s["speaker_raw"].strip()
-    speech = s["speech"].strip()
-
-    if len(speaker) < 5:
-        return False
-
-    if len(speech) < 20:
-        return False
-
-    bad_speakers = ["Sir, I move", "General)", "Mr."]
-    if speaker in bad_speakers:
-        return False
-
-    return True
 def is_valid_speech(s):
     if len(s["speaker_raw"]) < 5:
         return False
