@@ -147,3 +147,6 @@ MongoDB local Community Edition does not support Atlas Vector Search. For $vecto
 For now, if you’re using local MongoDB, we’ll do semantic search in Python using cosine similarity.
 
 python semantic_search_local.py
+
+
+python -m uvicorn api:app --reload
