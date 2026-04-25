@@ -72,3 +72,50 @@ db.speakers.find({
 })
 
 //python extract_special_speakers.py - to get speaker with special character
+
+python enrich_speeches.py
+db.speeches.findOne({}, { speaker: 1, word_count: 1, speech_type: 1, keywords: 1 })
+
+
+
+//basic query
+db.speeches.find(
+  {},
+  { _id: 0, speaker: 1, word_count: 1, speech_type: 1, keywords: 1 }
+)
+//Pretty output (readable)
+
+db.speeches.find(
+  {},
+  { _id: 0, speaker: 1, word_count: 1, speech_type: 1, keywords: 1 }
+).pretty()
+
+//Limit output (recommended for testing)
+db.speeches.find(
+  {},
+  { _id: 0, speaker: 1, word_count: 1, speech_type: 1, keywords: 1 }
+).limit(10).pretty()
+
+//Filter example (only speeches with keywords)
+db.speeches.find(
+  { keywords: { $exists: true, $ne: [] } },
+  { _id: 0, speaker: 1, keywords: 1 }
+)
+
+Count enriched records
+
+db.speeches.countDocuments({
+  word_count: { $exists: true }
+})
+
+analyze data
+db.speeches.aggregate([
+  { $group: { _id: "$speech_type", count: { $sum: 1 } } }
+])
+
+top speakers
+db.speeches.aggregate([
+  { $group: { _id: "$speaker", total: { $sum: 1 } } },
+  { $sort: { total: -1 } },
+  { $limit: 10 }
+])
