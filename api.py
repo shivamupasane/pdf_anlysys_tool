@@ -13,7 +13,6 @@ speeches_col = db["speeches"]
 speakers_col = db["speakers"]
 
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-client = OpenAI(api_key="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")
 
 @app.get("/speakers")
 def get_speakers():
