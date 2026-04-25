@@ -119,3 +119,31 @@ db.speeches.aggregate([
   { $sort: { total: -1 } },
   { $limit: 10 }
 ])
+#pip install sentence-transformers
+
+python -m pip install --upgrade pip
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install sentence-transformers scikit-learn pymongo numpy
+python -c "import torch; print(torch.__version__); from sentence_transformers import SentenceTransformer; print('ok')"
+
+#for python 3.11
+python -m ensurepip --upgrade
+python -m pip --version
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+
+
+python generate_embeddings.py
+
+#verify embedding
+db.speeches.findOne(
+  { embedding: { $exists: true } },
+  { speaker: 1, speech: 1, embedding: { $slice: 5 } }
+)
+
+MongoDB local Community Edition does not support Atlas Vector Search. For $vectorSearch, you need MongoDB Atlas with a vector search index. MongoDB docs show $vectorSearch as an aggregation stage for Atlas Vector Search.
+
+For now, if you’re using local MongoDB, we’ll do semantic search in Python using cosine similarity.
+
+python semantic_search_local.py
