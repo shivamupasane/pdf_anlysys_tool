@@ -3,7 +3,8 @@ from pymongo import MongoClient
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-
+from openai import OpenAI
+import requests
 app = FastAPI()
 
 client = MongoClient("mongodb://localhost:27017")
@@ -12,7 +13,7 @@ speeches_col = db["speeches"]
 speakers_col = db["speakers"]
 
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-
+client = OpenAI(api_key="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")
 
 @app.get("/speakers")
 def get_speakers():
@@ -72,3 +73,52 @@ def semantic_search(q: str, speaker: str | None = None, top_k: int = 5):
     results.sort(key=lambda x: x["score"], reverse=True)
 
     return results[:top_k]
+def ask_llm(question, context):
+    prompt = f"""
+Answer using ONLY the context.
+
+Question: {question}
+Context: {context}
+"""
+
+    response = requests.post(
+        "http://localhost:11434/api/generate",
+        json={
+            "model": "llama3",
+            "prompt": prompt,
+            "stream": False
+        }
+    )
+
+    return response.json()["response"]
+@app.get("/ask")
+def ask(q: str, top_k: int = 5):
+    retrieved = semantic_search(q, top_k=top_k)
+
+    context_parts = []
+    for i, r in enumerate(retrieved, start=1):
+        context_parts.append(
+            f"""
+    Source {i}
+    Speaker: {r['speaker']}
+    Date: {r['date']}
+    Speech: {r['speech']}
+        """
+        )
+
+    context = "\n".join(context_parts)
+
+    answer = ask_llm(q, context)
+
+    return {
+        "question": q,
+        "answer": answer,
+        "sources": retrieved
+    }
+    
+    #return {
+    #"question": q,
+    #"llm_answer": answer,
+    #"semantic_search_sources": retrieved,
+    #"note": "llm_answer is generated from semantic_search_sources"
+    #}
